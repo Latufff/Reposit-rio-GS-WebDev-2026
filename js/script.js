@@ -16,6 +16,7 @@
     initThemes();
     initMobileMenu();
     initActiveNav();
+    initReveal();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -83,6 +84,30 @@
     }, { rootMargin: "-45% 0px -50% 0px" });
 
     secoes.forEach(function (s) { observer.observe(s); });
+  }
+
+  // Anima a entrada dos elementos conforme eles aparecem ao rolar a pagina
+  function initReveal() {
+    var alvos = document.querySelectorAll(
+      ".section-head, .card, .benefit, .flow-step, .objetivos-metric, .objetivos-text, .problema-text, .slideshow, .quiz, .form, .form-intro"
+    );
+    alvos.forEach(function (el) { el.classList.add("reveal"); });
+
+    if (!("IntersectionObserver" in window)) {
+      alvos.forEach(function (el) { el.classList.add("visible"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    alvos.forEach(function (el) { observer.observe(el); });
   }
 
 })();
