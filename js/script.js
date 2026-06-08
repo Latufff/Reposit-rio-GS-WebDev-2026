@@ -15,6 +15,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     initThemes();
     initMobileMenu();
+    initActiveNav();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -59,6 +60,29 @@
         toggle.setAttribute("aria-expanded", "false");
       });
     });
+  }
+
+  // Destaca no menu a secao que esta visivel na tela
+  function initActiveNav() {
+    var links = Array.prototype.slice.call(document.querySelectorAll(".nav-link"));
+    var secoes = links
+      .map(function (l) { return document.querySelector(l.getAttribute("href")); })
+      .filter(Boolean);
+
+    if (!("IntersectionObserver" in window) || !secoes.length) return;
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var id = "#" + entry.target.id;
+          links.forEach(function (l) {
+            l.classList.toggle("active", l.getAttribute("href") === id);
+          });
+        }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+
+    secoes.forEach(function (s) { observer.observe(s); });
   }
 
 })();
