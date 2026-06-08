@@ -17,6 +17,7 @@
     initMobileMenu();
     initActiveNav();
     initReveal();
+    initScrollProgress();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -108,6 +109,20 @@
     }, { threshold: 0.12 });
 
     alvos.forEach(function (el) { observer.observe(el); });
+  }
+
+  // Atualiza a barra de progresso de leitura conforme o scroll da pagina
+  function initScrollProgress() {
+    var bar = document.getElementById("scrollProgress");
+    if (!bar) return;
+    function atualizar() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      bar.style.width = pct + "%";
+    }
+    window.addEventListener("scroll", atualizar, { passive: true });
+    atualizar();
   }
 
 })();
