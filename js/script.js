@@ -14,6 +14,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     initThemes();
+    initMobileMenu();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -37,6 +38,27 @@
         b.classList.toggle("active", b.getAttribute("data-theme-value") === tema);
       });
     }
+  }
+
+  // Abre e fecha o menu mobile (e fecha ao clicar em um link)
+  function initMobileMenu() {
+    var toggle = document.getElementById("navToggle");
+    var menu = document.getElementById("navMenu");
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener("click", function () {
+      var aberto = menu.classList.toggle("open");
+      toggle.classList.toggle("open", aberto);
+      toggle.setAttribute("aria-expanded", aberto ? "true" : "false");
+    });
+
+    menu.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        menu.classList.remove("open");
+        toggle.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      });
+    });
   }
 
 })();
