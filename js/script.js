@@ -18,6 +18,7 @@
     initActiveNav();
     initReveal();
     initScrollProgress();
+    initCounters();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -123,6 +124,38 @@
     }
     window.addEventListener("scroll", atualizar, { passive: true });
     atualizar();
+  }
+
+  // Anima os numeros das estatisticas do hero ate o valor final
+  function initCounters() {
+    var nums = document.querySelectorAll("[data-count]");
+    if (!nums.length) return;
+
+    function animar(el) {
+      var alvo = parseInt(el.getAttribute("data-count"), 10);
+      var sufixo = el.getAttribute("data-suffix") || "";
+      var inicio = null;
+      var duracao = 1400;
+      function passo(ts) {
+        if (!inicio) inicio = ts;
+        var p = Math.min((ts - inicio) / duracao, 1);
+        var valor = Math.round(p * alvo);
+        el.textContent = valor + sufixo;
+        if (p < 1) requestAnimationFrame(passo);
+      }
+      requestAnimationFrame(passo);
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      nums.forEach(animar);
+      return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { animar(entry.target); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.6 });
+    nums.forEach(function (n) { obs.observe(n); });
   }
 
 })();
