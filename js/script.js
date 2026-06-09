@@ -21,6 +21,7 @@
     initCounters();
     initSlideshow();
     initQuiz();
+    initForm();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -319,6 +320,61 @@
     });
 
     render();
+  }
+
+  // Valida os campos do formulario com regex e exibe mensagens de erro/sucesso
+  function initForm() {
+    var form = document.getElementById("contactForm");
+    if (!form) return;
+    var sucesso = document.getElementById("formSuccess");
+
+    var regras = {
+      nome: function (v) { return v.trim().length >= 2 ? "" : "Informe seu nome (minimo 2 caracteres)."; },
+      empresa: function (v) { return v.trim().length >= 2 ? "" : "Informe o nome da empresa."; },
+      email: function (v) {
+        if (!v.trim()) return "Informe seu e-mail.";
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(v.trim()) ? "" : "Digite um e-mail valido.";
+      },
+      mensagem: function (v) { return v.trim().length >= 5 ? "" : "Escreva uma mensagem (minimo 5 caracteres)."; }
+    };
+
+    function validarCampo(campo) {
+      var input = form.elements[campo];
+      var erro = regras[campo](input.value);
+      var box = input.closest(".field");
+      var msg = form.querySelector('[data-error-for="' + campo + '"]');
+      box.classList.toggle("invalid", !!erro);
+      if (msg) msg.textContent = erro;
+      return !erro;
+    }
+
+    Object.keys(regras).forEach(function (campo) {
+      form.elements[campo].addEventListener("input", function () {
+        if (form.elements[campo].closest(".field").classList.contains("invalid")) {
+          validarCampo(campo);
+        }
+      });
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      sucesso.hidden = true;
+
+      var valido = true;
+      Object.keys(regras).forEach(function (campo) {
+        if (!validarCampo(campo)) valido = false;
+      });
+
+      if (valido) {
+        form.reset();
+        sucesso.hidden = false;
+        sucesso.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        var primeiroErro = form.querySelector(".field.invalid input, .field.invalid textarea");
+        if (primeiroErro) primeiroErro.focus();
+      }
+    });
   }
 
 })();
