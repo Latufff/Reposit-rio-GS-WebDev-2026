@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="orbit">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OrbitLink Predict - monitoramento inteligente para operacoes remotas com GPS, satelite, sensoriamento remoto e Edge Computing." />
+  <meta name="theme-color" content="#060a1a" />
+  <title>OrbitLink Predict — Monitoramento Inteligente para Operações Remotas</title>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="OrbitLink Predict" />
+  <meta property="og:description" content="Inteligência orbital para antecipar riscos em operações remotas." />
+  <meta property="og:image" content="assets/images/hero.svg" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- Skip link (acessibilidade) -->
+  <a href="#hero" class="skip-link">Pular para o conteúdo</a>
+
+  <!-- ===== Sprite de ícones de linha (reutilizáveis) ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="ic-gps" viewBox="0 0 24 24"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+      <symbol id="ic-sat" viewBox="0 0 24 24"><path d="M5 15l4 4M7 17l-3 3M9.5 8.5l6 6"/><rect x="9" y="3.5" width="5" height="5" rx="1" transform="rotate(45 11.5 6)"/><rect x="14.5" y="11" width="5" height="5" rx="1" transform="rotate(45 17 13.5)"/><path d="M16 4a4 4 0 0 1 4 4M16 1.5A6.5 6.5 0 0 1 22.5 8"/></symbol>
+      <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9Z"/></symbol>
+      <symbol id="ic-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></symbol>
+      <symbol id="ic-mountain" viewBox="0 0 24 24"><path d="M3 19h18L14 7l-3.5 5.5L8 9l-5 10Z"/></symbol>
+      <symbol id="ic-sprout" viewBox="0 0 24 24"><path d="M12 21v-8M12 13c0-3 2.5-5 6-5 0 3-2.5 5-6 5ZM12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5Z"/></symbol>
+      <symbol id="ic-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+      <symbol id="ic-truck" viewBox="0 0 24 24"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></symbol>
+      <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></symbol>
+      <symbol id="ic-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></symbol>
+      <symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="ic-coin" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+      <symbol id="ic-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5ZM3 13l9 5 9-5M3 17l9 5 9-5"/></symbol>
+      <symbol id="ic-offline" viewBox="0 0 24 24"><path d="M5 12.5a7 7 0 0 1 11-1M8 16a4 4 0 0 1 6-.5"/><circle cx="12" cy="19" r="1"/><path d="M3 3l18 18"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ===================== HEADER FIXO + NAVEGAÇÃO ===================== -->
+  <header class="header" id="header">
+    <nav class="nav container" aria-label="Navegação principal">
+      <a href="#hero" class="brand" aria-label="OrbitLink Predict - início">
+        <img src="assets/images/favicon.svg" alt="" width="34" height="34" />
+        <span>OrbitLink<strong>Predict</strong></span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#problema" class="nav-link">Problema</a></li>
+        <li><a href="#tecnologias" class="nav-link">Tecnologias</a></li>
+        <li><a href="#objetivos" class="nav-link">Objetivos</a></li>
+        <li><a href="#publico" class="nav-link">Público</a></li>
+        <li><a href="#beneficios" class="nav-link">Benefícios</a></li>
+        <li><a href="#aplicacao" class="nav-link">Aplicação</a></li>
+        <li><a href="#quiz" class="nav-link">Quiz</a></li>
+        <li><a href="#contato" class="nav-link nav-cta">Contato</a></li>
+      </ul>
+
+      <div class="theme-switch" role="group" aria-label="Selecionar tema">
+        <button class="theme-btn active" data-theme-value="light" title="Tema Claro" aria-label="Tema Claro">☀</button>
+        <button class="theme-btn" data-theme-value="dark" title="Tema Escuro" aria-label="Tema Escuro">🌙</button>
+        <button class="theme-btn" data-theme-value="orbit" title="Tema Orbit" aria-label="Tema Orbit">🛰</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ===================== 1. HERO ===================== -->
+    <section class="hero" id="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="badge">🚀 Plataforma SaaS de Inteligência Orbital</span>
+          <h1 class="hero-title">Monitoramento inteligente para <span class="grad-text">operações remotas</span></h1>
+          <p class="hero-subtitle">Antecipe riscos usando GPS, satélite, sensoriamento remoto e Edge Computing.</p>
+          <div class="hero-actions">
+            <a href="#contato" class="btn btn-primary">Solicitar demonstração</a>
+            <a href="#tecnologias" class="btn btn-ghost">Conhecer a tecnologia</a>
+          </div>
+          <ul class="hero-stats">
+            <li><strong>72h</strong><span>antecipação de risco</span></li>
+            <li><strong>4</strong><span>dimensões monitoradas</span></li>
+            <li><strong>100%</strong><span>processamento na borda</span></li>
+          </ul>
+        </div>
+        <div class="hero-visual">
+          <img class="hero-dashboard" src="assets/images/dashboard.svg" alt="Painel do OrbitLink Predict mostrando OrbitScore, gráfico de qualidade e status das operações" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAIXA DE PROVA SOCIAL ===================== -->
+    <section class="proof" aria-label="Setores atendidos">
+      <div class="container proof-inner">
+        <span class="proof-label">Construído para operações de</span>
+        <ul class="proof-list">
+          <li><svg class="ic" aria-hidden="true"><use href="#ic-mountain"/></svg> Mineração</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#ic-sprout"/></svg> Agronegócio</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#ic-bolt"/></svg> Energia</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg> Logística</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== 2. PROBLEMA ===================== -->
+    <section class="section" id="problema">
+      <div class="container">
+        <header class="section-head">
+          <span class="eyebrow">O desafio</span>
+          <h2 class="section-title">Operar no limite da conectividade</h2>
+        </header>
+        <div class="problema-text">
+          <p>Operações remotas sofrem com clima imprevisível, conectividade instável e falta de monitoramento inteligente em campo.</p>
+          <p>Sem informação em tempo real, cada hora parada aumenta riscos para equipes e ativos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 3. TECNOLOGIAS ===================== -->
+    <section class="section section-alt" id="tecnologias">
+      <div class="container">
+        <header class="section-head">
+          <span class="eyebrow">Stack orbital</span>
+          <h2 class="section-title">Tecnologias da plataforma</h2>
+        </header>
+        <div class="cards-grid">
+          <article class="card glass">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-gps"/></svg></div>
+            <h3>GPS</h3>
+            <span class="desc">Posicionamento preciso de equipes e ativos em campo.</span>
+          </article>
+          <article class="card glass">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-sat"/></svg></div>
+            <h3>Comunicação via Satélite</h3>
+            <span class="desc">Conectividade orbital onde a rede terrestre não alcança.</span>
+          </article>
+          <article class="card glass">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-globe"/></svg></div>
+            <h3>Sensoriamento Remoto</h3>
+            <span class="desc">Análise de clima e terreno a partir do espaço.</span>
+          </article>
+          <article class="card glass">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-cpu"/></svg></div>
+            <h3>Edge Computing</h3>
+            <span class="desc">Processamento local e decisões em tempo real.</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 4. OBJETIVOS ===================== -->
+    <section class="section" id="objetivos">
+      <div class="container objetivos-wrap">
+        <div class="objetivos-text">
+          <span class="eyebrow">Para onde vamos</span>
+          <h2 class="section-title">Objetivos da solução</h2>
+          <p>Entregar previsibilidade e segurança para operações remotas por meio de tecnologia espacial.</p>
+          <ul class="check-list">
+            <li>Antecipar riscos antes de virarem incidentes.</li>
+            <li>Reduzir paralisações não planejadas em campo.</li>
+            <li>Unificar clima, conectividade e infraestrutura.</li>
+            <li>Apoiar a decisão com indicadores claros.</li>
+          </ul>
+        </div>
+        <div class="objetivos-metric glass">
+          <div class="ring-metric" role="img" aria-label="Cobertura de monitoramento de 98 por cento">
+            <span>98%</span>
+          </div>
+          <p>de cobertura de monitoramento contínuo nas operações conectadas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 5. PÚBLICO-ALVO ===================== -->
+    <section class="section section-alt" id="publico">
+      <div class="container">
+        <header class="section-head">
+          <span class="eyebrow">Para quem</span>
+          <h2 class="section-title">Público-alvo</h2>
+        </header>
+        <div class="cards-grid">
+          <article class="card glass card-target">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-mountain"/></svg></div>
+            <h3>Mineração</h3>
+            <span class="desc">Frentes isoladas com logística e risco elevados.</span>
+          </article>
+          <article class="card glass card-target">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-sprout"/></svg></div>
+            <h3>Agronegócio</h3>
+            <span class="desc">Fazendas extensas em áreas de baixa conectividade.</span>
+          </article>
+          <article class="card glass card-target">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-bolt"/></svg></div>
+            <h3>Energia</h3>
+            <span class="desc">Usinas e linhas em locais remotos.</span>
+          </article>
+          <article class="card glass card-target">
+            <div class="card-icon"><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg></div>
+            <h3>Logística</h3>
+            <span class="desc">Rotas longas em corredores sem cobertura.</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 6. BENEFÍCIOS ===================== -->
+    <section class="section" id="beneficios">
+      <div class="container">
+        <header class="section-head">
+          <span class="eyebrow">Valor entregue</span>
+          <h2 class="section-title">Benefícios</h2>
+        </header>
+        <div class="benefits-grid">
+          <div class="benefit glass">
+            <div class="benefit-icon"><svg class="ic" aria-hidden="true"><use href="#ic-shield"/></svg></div>
+            <h3>Mais segurança</h3>
+            <span class="desc">Alertas preventivos protegem equipes e ativos.</span>
+          </div>
+          <div class="benefit glass">
+            <div class="benefit-icon"><svg class="ic" aria-hidden="true"><use href="#ic-trend"/></svg></div>
+            <h3>Mais eficiência</h3>
+            <span class="desc">Menos paradas e melhor uso de recursos.</span>
+          </div>
+          <div class="benefit glass">
+            <div class="benefit-icon"><svg class="ic" aria-hidden="true"><use href="#ic-eye"/></svg></div>
+            <h3>Previsibilidade</h3>
+            <span class="desc">Decisões baseadas em dados e simulação.</span>
+          </div>
+          <div class="benefit glass">
+            <div class="benefit-icon"><svg class="ic" aria-hidden="true"><use href="#ic-coin"/></svg></div>
+            <h3>Menos custos</h3>
+            <span class="desc">Antecipar riscos evita perdas e retrabalho.</span>
+          </div>
+          <div class="benefit glass">
+            <div class="benefit-icon"><svg class="ic" aria-hidden="true"><use href="#ic-layers"/></svg></div>
+            <h3>Visão unificada</h3>
+            <span class="desc">Clima, conexão e terreno em um só lugar.</span>
+          </div>
+          <div class="benefit glass">
+            <div class="benefit-icon"><svg class="ic" aria-hidden="true"><use href="#ic-offline"/></svg></div>
+            <h3>Opera offline</h3>
+            <span class="desc">Edge mantém a inteligência mesmo sem conexão.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 7. APLICAÇÃO ===================== -->
+    <section class="section section-alt" id="aplicacao">
+      <div class="container">
+        <header class="section-head">
+          <span class="eyebrow">Na prática</span>
+          <h2 class="section-title">Como o OrbitLink funciona</h2>
+          <p class="section-sub">Coleta, processa na borda, classifica o risco e age continuamente.</p>
+        </header>
+
+        <ol class="flow" aria-label="Fluxo de funcionamento">
+          <li class="flow-step glass">
+            <span class="flow-num">1</span>
+            <h3>Coleta</h3>
+            <span class="desc">Sensores e fontes orbitais captam clima, posição e conexão.</span>
+          </li>
+          <li class="flow-arrow" aria-hidden="true">→</li>
+          <li class="flow-step glass">
+            <span class="flow-num">2</span>
+            <h3>Processa na borda</h3>
+            <span class="desc">Edge Computing analisa os dados localmente.</span>
+          </li>
+          <li class="flow-arrow" aria-hidden="true">→</li>
+          <li class="flow-step glass">
+            <span class="flow-num">3</span>
+            <h3>Classifica risco</h3>
+            <span class="desc">O OrbitScore traduz tudo em risco objetivo.</span>
+          </li>
+          <li class="flow-arrow" aria-hidden="true">→</li>
+          <li class="flow-step glass">
+            <span class="flow-num">4</span>
+            <h3>Age</h3>
+            <span class="desc">Alertas e recomendações chegam ao gestor.</span>
+          </li>
+        </ol>
+
+        <div class="slideshow" id="slideshow" aria-roledescription="carrossel" aria-label="Tecnologias em ação">
+          <div class="slides">
+            <figure class="slide is-active">
+              <img src="assets/images/slide1.svg" alt="Satélite de comunicação em órbita ao redor da Terra" />
+              <figcaption>Conectividade via satélites</figcaption>
+            </figure>
+            <figure class="slide">
+              <img src="assets/images/slide2.svg" alt="Sensoriamento remoto mapeando o território a partir do espaço" />
+              <figcaption>Sensoriamento do território</figcaption>
+            </figure>
+            <figure class="slide">
+              <img src="assets/images/slide3.svg" alt="Rede de Edge Computing processando dados na borda" />
+              <figcaption>Processamento na borda</figcaption>
+            </figure>
+          </div>
+          <button class="slide-btn prev" id="slidePrev" aria-label="Imagem anterior">‹</button>
+          <button class="slide-btn next" id="slideNext" aria-label="Próxima imagem">›</button>
+          <div class="slide-dots" id="slideDots" role="tablist" aria-label="Selecionar imagem"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 8. QUIZ ===================== -->
+    <section class="section" id="quiz">
+      <div class="container">
+        <header class="section-head">
+          <span class="eyebrow">Diagnóstico rápido</span>
+          <h2 class="section-title">Qual o risco da sua operação?</h2>
+          <p class="section-sub">Responda dez perguntas e descubra o nível de risco da sua operação.</p>
+        </header>
+
+        <div class="quiz glass" id="quizBox">
+          <div class="quiz-progress" aria-hidden="true"><span id="quizBar" style="width:10%"></span></div>
+          <div class="quiz-stage" id="quizStage">
+            <p class="quiz-count" id="quizCount">Pergunta 1 de 10</p>
+            <h3 class="quiz-question" id="quizQuestion">Como é a cobertura de comunicação no local?</h3>
+            <div class="quiz-options" id="quizOptions">
+              <button class="quiz-option">Estável (celular/fibra)</button>
+              <button class="quiz-option selected">Intermitente</button>
+              <button class="quiz-option">Inexistente</button>
+            </div>
+          </div>
+          <div class="quiz-nav">
+            <button class="btn btn-ghost" id="quizPrev" disabled>Voltar</button>
+            <button class="btn btn-primary" id="quizNext">Próxima</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 9. FORMULÁRIO ===================== -->
+    <section class="section section-alt" id="contato">
+      <div class="container form-wrap">
+        <div class="form-intro">
+          <span class="eyebrow">Fale com a gente</span>
+          <h2 class="section-title">Solicite uma demonstração</h2>
+          <p>Conte sobre sua operação e veja o OrbitLink Predict em ação.</p>
+        </div>
+
+        <form class="form glass" id="contactForm">
+          <div class="field">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required />
+            <small class="error" data-error-for="nome"></small>
+          </div>
+          <div class="field">
+            <label for="empresa">Empresa</label>
+            <input type="text" id="empresa" name="empresa" placeholder="Nome da empresa" required />
+            <small class="error" data-error-for="empresa"></small>
+          </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="voce@empresa.com" required />
+            <small class="error" data-error-for="email"></small>
+          </div>
+          <div class="field">
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" rows="4" placeholder="Como podemos ajudar?" required></textarea>
+            <small class="error" data-error-for="mensagem"></small>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Enviar solicitação</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== CTA FINAL ===================== -->
+    <section class="cta-final">
+      <div class="container cta-inner glass">
+        <h2>Pronto para antecipar riscos?</h2>
+        <p>Coloque a inteligência orbital a favor da sua operação.</p>
+        <a href="#contato" class="btn btn-primary">Solicitar demonstração</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== 10. RODAPÉ ===================== -->
+  <footer class="footer" id="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#hero" class="brand">
+          <img src="assets/images/favicon.svg" alt="" width="30" height="30" />
+          <span>OrbitLink<strong>Predict</strong></span>
+        </a>
+        <p>Inteligência orbital para operações remotas. Global Solution FIAP.</p>
+      </div>
+
+      <div class="footer-team">
+        <h3>Integrantes</h3>
+        <ul>
+          <li><span>Lucas Latuf</span><em>RM 570068</em></li>
+          <li><span>Lucas Cardoso</span><em>RM 571430</em></li>
+          <li><span>Cristian Schmidt</span><em>RM 570183</em></li>
+          <li><span>Arthur Canzian</span><em>RM 569828</em></li>
+          <li><span>Rodrigo Cocka</span><em>RM 573364</em></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 OrbitLink Predict · FIAP · Front-End Design</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

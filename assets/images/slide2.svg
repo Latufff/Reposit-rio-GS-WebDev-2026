@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" role="img" aria-label="Sensoriamento remoto sobre o territorio">
+  <defs>
+    <linearGradient id="s2bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#04122a"/><stop offset="100%" stop-color="#0a2f3a"/>
+    </linearGradient>
+    <linearGradient id="terr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c5b4a"/><stop offset="100%" stop-color="#0c2e35"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7cffd4" stop-opacity="0.5"/><stop offset="100%" stop-color="#7cffd4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#s2bg)"/>
+  <path d="M0 380 Q300 320 600 380 T1200 380 V600 H0 Z" fill="url(#terr)"/>
+  <g stroke="#2fae8e" stroke-width="1.5" opacity="0.45" fill="none">
+    <path d="M0 430 H1200"/><path d="M0 490 H1200"/><path d="M0 550 H1200"/>
+    <path d="M200 380 V600"/><path d="M500 380 V600"/><path d="M800 380 V600"/><path d="M1050 380 V600"/>
+  </g>
+  <polygon points="600,120 560,180 640,180" fill="#cfe6ff"/>
+  <rect x="572" y="120" width="56" height="16" rx="4" fill="#9b6bff" transform="rotate(0 600 128)"/>
+  <path d="M600 180 L470 380 L730 380 Z" fill="url(#beam)"/>
+  <g fill="#7cffd4">
+    <circle cx="470" cy="380" r="6"/><circle cx="600" cy="368" r="6"/><circle cx="730" cy="380" r="6"/>
+  </g>
+  <text x="60" y="545" fill="#bdeede" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Sensoriamento Remoto</text>
+</svg>
