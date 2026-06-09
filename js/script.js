@@ -19,6 +19,7 @@
     initReveal();
     initScrollProgress();
     initCounters();
+    initSlideshow();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -156,6 +157,47 @@
       });
     }, { threshold: 0.6 });
     nums.forEach(function (n) { obs.observe(n); });
+  }
+
+  // Controla o slideshow: autoplay, setas, dots e pausa ao passar o mouse
+  function initSlideshow() {
+    var root = document.getElementById("slideshow");
+    if (!root) return;
+
+    var slides = Array.prototype.slice.call(root.querySelectorAll(".slide"));
+    var btnPrev = document.getElementById("slidePrev");
+    var btnNext = document.getElementById("slideNext");
+    var dotsBox = document.getElementById("slideDots");
+    var atual = 0;
+    var timer = null;
+    var INTERVALO = 5000;
+
+    slides.forEach(function (_, i) {
+      var dot = document.createElement("button");
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", "Imagem " + (i + 1));
+      dot.addEventListener("click", function () { irPara(i); reiniciar(); });
+      dotsBox.appendChild(dot);
+    });
+    var dots = Array.prototype.slice.call(dotsBox.children);
+
+    function irPara(i) {
+      atual = (i + slides.length) % slides.length;
+      slides.forEach(function (s, idx) { s.classList.toggle("is-active", idx === atual); });
+      dots.forEach(function (d, idx) { d.classList.toggle("active", idx === atual); });
+    }
+    function avancar() { irPara(atual + 1); }
+    function iniciar() { timer = setInterval(avancar, INTERVALO); }
+    function reiniciar() { clearInterval(timer); iniciar(); }
+
+    btnNext.addEventListener("click", function () { avancar(); reiniciar(); });
+    btnPrev.addEventListener("click", function () { irPara(atual - 1); reiniciar(); });
+
+    root.addEventListener("mouseenter", function () { clearInterval(timer); });
+    root.addEventListener("mouseleave", iniciar);
+
+    irPara(0);
+    iniciar();
   }
 
 })();
