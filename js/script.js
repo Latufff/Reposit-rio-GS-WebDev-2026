@@ -5,3 +5,4 @@
    -Arthur Canzian Freitas Teodoro RM:569828
    -Lucas Cardoso Franco RM: 571430
    -Cristian Schmidt de Araújo Filho RM: 570183 
+   -Rodrigo Cocka Poccinelli RM: 573364
