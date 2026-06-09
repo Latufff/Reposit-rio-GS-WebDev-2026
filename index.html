@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#060a1a" />
   <title>OrbitLink Predict — Monitoramento Inteligente para Operações Remotas</title>
 
+  <!-- Open Graph / compartilhamento -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="OrbitLink Predict" />
   <meta property="og:description" content="Inteligência orbital para antecipar riscos em operações remotas." />
@@ -23,6 +24,9 @@
 
   <!-- Skip link (acessibilidade) -->
   <a href="#hero" class="skip-link">Pular para o conteúdo</a>
+
+  <!-- Barra de progresso de scroll -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
   <!-- ===== Sprite de ícones de linha (reutilizáveis) ===== -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -68,7 +72,7 @@
       </ul>
 
       <div class="theme-switch" role="group" aria-label="Selecionar tema">
-        <button class="theme-btn active" data-theme-value="light" title="Tema Claro" aria-label="Tema Claro">☀</button>
+        <button class="theme-btn" data-theme-value="light" title="Tema Claro" aria-label="Tema Claro">☀</button>
         <button class="theme-btn" data-theme-value="dark" title="Tema Escuro" aria-label="Tema Escuro">🌙</button>
         <button class="theme-btn" data-theme-value="orbit" title="Tema Orbit" aria-label="Tema Orbit">🛰</button>
       </div>
@@ -90,9 +94,9 @@
             <a href="#tecnologias" class="btn btn-ghost">Conhecer a tecnologia</a>
           </div>
           <ul class="hero-stats">
-            <li><strong>72h</strong><span>antecipação de risco</span></li>
-            <li><strong>4</strong><span>dimensões monitoradas</span></li>
-            <li><strong>100%</strong><span>processamento na borda</span></li>
+            <li><strong data-count="72" data-suffix="h">0</strong><span>antecipação de risco</span></li>
+            <li><strong data-count="4">0</strong><span>dimensões monitoradas</span></li>
+            <li><strong data-count="100" data-suffix="%">0</strong><span>processamento na borda</span></li>
           </ul>
         </div>
         <div class="hero-visual">
@@ -324,19 +328,21 @@
         </header>
 
         <div class="quiz glass" id="quizBox">
-          <div class="quiz-progress" aria-hidden="true"><span id="quizBar" style="width:10%"></span></div>
+          <div class="quiz-progress" aria-hidden="true"><span id="quizBar"></span></div>
           <div class="quiz-stage" id="quizStage">
-            <p class="quiz-count" id="quizCount">Pergunta 1 de 10</p>
-            <h3 class="quiz-question" id="quizQuestion">Como é a cobertura de comunicação no local?</h3>
-            <div class="quiz-options" id="quizOptions">
-              <button class="quiz-option">Estável (celular/fibra)</button>
-              <button class="quiz-option selected">Intermitente</button>
-              <button class="quiz-option">Inexistente</button>
-            </div>
+            <p class="quiz-count" id="quizCount"></p>
+            <h3 class="quiz-question" id="quizQuestion"></h3>
+            <div class="quiz-options" id="quizOptions"></div>
           </div>
           <div class="quiz-nav">
             <button class="btn btn-ghost" id="quizPrev" disabled>Voltar</button>
-            <button class="btn btn-primary" id="quizNext">Próxima</button>
+            <button class="btn btn-primary" id="quizNext" disabled>Próxima</button>
+          </div>
+          <div class="quiz-result" id="quizResult" hidden>
+            <div class="result-badge" id="resultBadge"></div>
+            <h3 id="resultTitle"></h3>
+            <p id="resultText"></p>
+            <button class="btn btn-ghost" id="quizRestart">Refazer quiz</button>
           </div>
         </div>
       </div>
@@ -351,7 +357,7 @@
           <p>Conte sobre sua operação e veja o OrbitLink Predict em ação.</p>
         </div>
 
-        <form class="form glass" id="contactForm">
+        <form class="form glass" id="contactForm" novalidate>
           <div class="field">
             <label for="nome">Nome</label>
             <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required />
@@ -373,6 +379,7 @@
             <small class="error" data-error-for="mensagem"></small>
           </div>
           <button type="submit" class="btn btn-primary btn-block">Enviar solicitação</button>
+          <p class="form-success" id="formSuccess" hidden>✅ Mensagem enviada com sucesso!</p>
         </form>
       </div>
     </section>
@@ -406,15 +413,4 @@
           <li><span>Lucas Cardoso</span><em>RM 571430</em></li>
           <li><span>Cristian Schmidt</span><em>RM 570183</em></li>
           <li><span>Arthur Canzian</span><em>RM 569828</em></li>
-          <li><span>Rodrigo Cocka</span><em>RM 573364</em></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2026 OrbitLink Predict · FIAP · Front-End Design</p>
-    </div>
-  </footer>
-
-  <script src="js/script.js"></script>
-</body>
-</html>
+  
