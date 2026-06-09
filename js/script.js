@@ -19,6 +19,9 @@
     initReveal();
     initScrollProgress();
     initCounters();
+    initSlideshow();
+    initQuiz();
+    initForm();
   });
 
   // Alterna entre os temas Orbit/Dark/Light e salva a preferencia no localStorage
@@ -156,6 +159,222 @@
       });
     }, { threshold: 0.6 });
     nums.forEach(function (n) { obs.observe(n); });
+  }
+
+  // Controla o slideshow: autoplay, setas, dots e pausa ao passar o mouse
+  function initSlideshow() {
+    var root = document.getElementById("slideshow");
+    if (!root) return;
+
+    var slides = Array.prototype.slice.call(root.querySelectorAll(".slide"));
+    var btnPrev = document.getElementById("slidePrev");
+    var btnNext = document.getElementById("slideNext");
+    var dotsBox = document.getElementById("slideDots");
+    var atual = 0;
+    var timer = null;
+    var INTERVALO = 5000;
+
+    slides.forEach(function (_, i) {
+      var dot = document.createElement("button");
+      dot.setAttribute("role", "tab");
+      dot.setAttribute("aria-label", "Imagem " + (i + 1));
+      dot.addEventListener("click", function () { irPara(i); reiniciar(); });
+      dotsBox.appendChild(dot);
+    });
+    var dots = Array.prototype.slice.call(dotsBox.children);
+
+    function irPara(i) {
+      atual = (i + slides.length) % slides.length;
+      slides.forEach(function (s, idx) { s.classList.toggle("is-active", idx === atual); });
+      dots.forEach(function (d, idx) { d.classList.toggle("active", idx === atual); });
+    }
+    function avancar() { irPara(atual + 1); }
+    function iniciar() { timer = setInterval(avancar, INTERVALO); }
+    function reiniciar() { clearInterval(timer); iniciar(); }
+
+    btnNext.addEventListener("click", function () { avancar(); reiniciar(); });
+    btnPrev.addEventListener("click", function () { irPara(atual - 1); reiniciar(); });
+
+    root.addEventListener("mouseenter", function () { clearInterval(timer); });
+    root.addEventListener("mouseleave", iniciar);
+
+    irPara(0);
+    iniciar();
+  }
+
+  // Banco de perguntas usado pelo quiz de risco operacional
+  var PERGUNTAS = [
+    { q: "A operacao fica a quantas horas do centro urbano mais proximo?",
+      o: [["Menos de 1h", 0], ["1h a 4h", 1], ["Mais de 4h", 2]] },
+    { q: "Como e a cobertura de comunicacao no local?",
+      o: [["Estavel (celular/fibra)", 0], ["Intermitente", 1], ["Inexistente", 2]] },
+    { q: "Existe redundancia de conectividade (ex.: satelite de backup)?",
+      o: [["Sim, redundancia completa", 0], ["Parcial", 1], ["Nenhuma", 2]] },
+    { q: "Com que frequencia ocorrem eventos climaticos severos?",
+      o: [["Raramente", 0], ["Ocasionalmente", 1], ["Frequentemente", 2]] },
+    { q: "Ha monitoramento em tempo real dos equipamentos?",
+      o: [["Sim, continuo", 0], ["Apenas periodico", 1], ["Nao ha", 2]] },
+    { q: "Como e o acesso fisico a operacao em uma emergencia?",
+      o: [["Rapido e facil", 0], ["Demorado", 1], ["Muito dificil", 2]] },
+    { q: "A equipe possui protocolos de contingencia definidos?",
+      o: [["Sim, testados", 0], ["Existem, mas nao testados", 1], ["Nao existem", 2]] },
+    { q: "Os dados operacionais sao processados localmente (edge)?",
+      o: [["Sim, na borda", 0], ["Parcialmente", 1], ["Tudo depende da nuvem", 2]] },
+    { q: "Qual o impacto financeiro de 1 hora de operacao parada?",
+      o: [["Baixo", 0], ["Moderado", 1], ["Critico", 2]] },
+    { q: "Ha historico de incidentes por falta de informacao em campo?",
+      o: [["Nenhum", 0], ["Poucos", 1], ["Varios", 2]] }
+  ];
+
+  // Conduz o quiz pelas perguntas e calcula o nivel de risco (Baixo/Medio/Alto)
+  function initQuiz() {
+    var stage = document.getElementById("quizStage");
+    if (!stage) return;
+
+    var elCount = document.getElementById("quizCount");
+    var elQuestion = document.getElementById("quizQuestion");
+    var elOptions = document.getElementById("quizOptions");
+    var btnPrev = document.getElementById("quizPrev");
+    var btnNext = document.getElementById("quizNext");
+    var bar = document.getElementById("quizBar");
+    var nav = document.querySelector(".quiz-nav");
+    var result = document.getElementById("quizResult");
+    var badge = document.getElementById("resultBadge");
+    var rTitle = document.getElementById("resultTitle");
+    var rText = document.getElementById("resultText");
+    var btnRestart = document.getElementById("quizRestart");
+
+    var indice = 0;
+    var respostas = new Array(PERGUNTAS.length).fill(null);
+
+    function render() {
+      var p = PERGUNTAS[indice];
+      elCount.textContent = "Pergunta " + (indice + 1) + " de " + PERGUNTAS.length;
+      elQuestion.textContent = p.q;
+      elOptions.innerHTML = "";
+
+      p.o.forEach(function (opcao, i) {
+        var btn = document.createElement("button");
+        btn.className = "quiz-option" + (respostas[indice] === i ? " selected" : "");
+        btn.textContent = opcao[0];
+        btn.addEventListener("click", function () {
+          respostas[indice] = i;
+          render();
+          btnNext.disabled = false;
+        });
+        elOptions.appendChild(btn);
+      });
+
+      bar.style.width = (indice / PERGUNTAS.length * 100) + "%";
+      btnPrev.disabled = indice === 0;
+      btnNext.disabled = respostas[indice] === null;
+      btnNext.textContent = indice === PERGUNTAS.length - 1 ? "Ver resultado" : "Proxima";
+    }
+
+    btnNext.addEventListener("click", function () {
+      if (respostas[indice] === null) return;
+      if (indice < PERGUNTAS.length - 1) {
+        indice++;
+        render();
+      } else {
+        mostrarResultado();
+      }
+    });
+
+    btnPrev.addEventListener("click", function () {
+      if (indice > 0) { indice--; render(); }
+    });
+
+    function mostrarResultado() {
+      var total = respostas.reduce(function (acc, v) { return acc + (v || 0); }, 0);
+      bar.style.width = "100%";
+      stage.hidden = true;
+      if (nav) nav.hidden = true;
+      result.hidden = false;
+
+      var nivel;
+      if (total <= 6) {
+        nivel = { cls: "low", icon: "🟢", titulo: "Baixo Risco",
+          texto: "Sua operacao tem boa resiliencia. O OrbitLink Predict mantem o monitoramento continuo e antecipa imprevistos." };
+      } else if (total <= 13) {
+        nivel = { cls: "mid", icon: "🟡", titulo: "Medio Risco",
+          texto: "Ha pontos de atencao relevantes. O OrbitLink Predict reduz paralisacoes e reforca a previsibilidade." };
+      } else {
+        nivel = { cls: "high", icon: "🔴", titulo: "Alto Risco",
+          texto: "Sua operacao esta bastante exposta. O OrbitLink Predict e altamente recomendado para antecipar riscos." };
+      }
+
+      badge.className = "result-badge " + nivel.cls;
+      badge.textContent = nivel.icon;
+      rTitle.textContent = nivel.titulo + " (" + total + "/20 pontos)";
+      rText.textContent = nivel.texto;
+    }
+
+    btnRestart.addEventListener("click", function () {
+      indice = 0;
+      respostas = new Array(PERGUNTAS.length).fill(null);
+      result.hidden = true;
+      stage.hidden = false;
+      if (nav) nav.hidden = false;
+      render();
+    });
+
+    render();
+  }
+
+  // Valida os campos do formulario com regex e exibe mensagens de erro/sucesso
+  function initForm() {
+    var form = document.getElementById("contactForm");
+    if (!form) return;
+    var sucesso = document.getElementById("formSuccess");
+
+    var regras = {
+      nome: function (v) { return v.trim().length >= 2 ? "" : "Informe seu nome (minimo 2 caracteres)."; },
+      empresa: function (v) { return v.trim().length >= 2 ? "" : "Informe o nome da empresa."; },
+      email: function (v) {
+        if (!v.trim()) return "Informe seu e-mail.";
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(v.trim()) ? "" : "Digite um e-mail valido.";
+      },
+      mensagem: function (v) { return v.trim().length >= 5 ? "" : "Escreva uma mensagem (minimo 5 caracteres)."; }
+    };
+
+    function validarCampo(campo) {
+      var input = form.elements[campo];
+      var erro = regras[campo](input.value);
+      var box = input.closest(".field");
+      var msg = form.querySelector('[data-error-for="' + campo + '"]');
+      box.classList.toggle("invalid", !!erro);
+      if (msg) msg.textContent = erro;
+      return !erro;
+    }
+
+    Object.keys(regras).forEach(function (campo) {
+      form.elements[campo].addEventListener("input", function () {
+        if (form.elements[campo].closest(".field").classList.contains("invalid")) {
+          validarCampo(campo);
+        }
+      });
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      sucesso.hidden = true;
+
+      var valido = true;
+      Object.keys(regras).forEach(function (campo) {
+        if (!validarCampo(campo)) valido = false;
+      });
+
+      if (valido) {
+        form.reset();
+        sucesso.hidden = false;
+        sucesso.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        var primeiroErro = form.querySelector(".field.invalid input, .field.invalid textarea");
+        if (primeiroErro) primeiroErro.focus();
+      }
+    });
   }
 
 })();
