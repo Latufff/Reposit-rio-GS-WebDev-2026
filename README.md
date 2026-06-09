@@ -1,6 +1,6 @@
 # 🛰️ OrbitLink Predict — Landing Page
 
-Landing page **one-page** premium do **OrbitLink Predict**, desenvolvida para as disciplinas **Front-End Design** e **Web Development** da Global Solution FIAP. Construída **100% com HTML5, CSS3 e JavaScript puro** — sem React, Vue, Angular, Bootstrap, Tailwind ou qualquer framework.
+Landing page do *OrbitLink Predict*, desenvolvida para as disciplinas Front-End Design e Web Development da Global Solution FIAP.
 
 ## 🚀 Como executar
 
